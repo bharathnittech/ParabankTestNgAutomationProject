@@ -22,6 +22,8 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.framework.reports.ReportsClass;
+import com.framework.utilities.Utils;
 import com.framework.webdriver.WebDriverClass;
 
 public class WebCommons {
@@ -92,19 +94,19 @@ public class WebCommons {
 	}
 
 	// Implicit wait
-	public void implicitWait(int seconds) {
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(seconds));
+	public void implicitWait() {
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(Utils.WAIT_TIME));
 	}
 
 	// Explicit wait
-	public void waitForLocator(By locator, int seconds) {
-		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(seconds));
+	public void waitForLocator(By locator) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(Utils.WAIT_TIME));
 		wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(locator, 0));
 	}
 
 	// Fluent Wait
-	public void fluentWait(By locator, int sec, int polling) {
-		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(sec))
+	public void fluentWait(By locator, int polling) {
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(Utils.WAIT_TIME))
 				.pollingEvery(Duration.ofSeconds(polling));
 		wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(locator, 0));
 	}
@@ -201,6 +203,18 @@ public class WebCommons {
 	// Method to open new window
 	public void openNewWindow() {
 		driver.switchTo().newWindow(WindowType.WINDOW);
+	}
+	
+	//Method to print message in report
+	public void log(String status, String message) {
+		if (status.equalsIgnoreCase("pass"))
+			ReportsClass.logger.pass(message);
+		else if (status.equalsIgnoreCase("fail"))
+			ReportsClass.logger.fail(message);
+		else if (status.equalsIgnoreCase("warning"))
+			ReportsClass.logger.warning(message);
+		else if (status.equalsIgnoreCase("info"))
+			ReportsClass.logger.info(message);
 	}
 
 }
