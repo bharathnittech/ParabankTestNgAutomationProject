@@ -1,14 +1,25 @@
 package com.framework.commons;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.util.Calendar;
 
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.WindowType;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.framework.webdriver.WebDriverClass;
@@ -19,7 +30,7 @@ public class WebCommons {
 
 	public WebDriver driver = WebDriverClass.getDriver();
 	Actions action = new Actions(driver);
-	
+
 	// Scroll till element
 	public void scrollToElement(WebElement element) {
 		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView()", element);
@@ -55,70 +66,141 @@ public class WebCommons {
 		else if (method.equalsIgnoreCase("visibleText"))
 			s.selectByVisibleText(option);
 	}
-	
-	//Perform double click on element
+
+	// Perform double click on element
 	public void doubleClick(WebElement element) {
 		action.doubleClick(element).perform();
 	}
-	
-	//Perform right click on element
+
+	// Perform right click on element
 	public void rightClick(WebElement element) {
 		action.contextClick(element).perform();
 	}
-	
-	//Perform mouse hover on element
+
+	// Perform mouse hover on element
 	public void mouseHover(WebElement element) {
 		action.moveToElement(element).perform();
 	}
-	
+
 	// Java Wait
 	public void wait(int seconds) {
 		try {
-			Thread.sleep(seconds*1000);
+			Thread.sleep(seconds * 1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	// Implicit wait
 	public void implicitWait(int seconds) {
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(seconds));
 	}
-	
-	// Explicit wait 
+
+	// Explicit wait
 	public void waitForLocator(By locator, int seconds) {
-		WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(seconds));
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(seconds));
 		wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(locator, 0));
 	}
-	
+
 	// Fluent Wait
-	
+	public void fluentWait(By locator, int sec, int polling) {
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(sec))
+				.pollingEvery(Duration.ofSeconds(polling));
+		wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(locator, 0));
+	}
+
 	// Method to generate unique id
-	
-	// Method to take screenshot of browser window and return the path of screenshot
-	
-	// Method to take screenshot of element and return the path of screenshot
-	
-	// Method to get page title 
-	
-	// Method to get window handle id
-	
-	// Method to get text value from element
-	
-	// Method to get attribute value from element
-	
-	// Method to wait for alert and then switch to alert
-	
+	public String uniqueId() {
+		String uniqueId = new SimpleDateFormat("MMddyyhhmmss").format(Calendar.getInstance().getTime());
+		return uniqueId;
+	}
+
+	// TaKe Screenshot of browser window and get the path to attach in report
+	public String takeScreenshotOfWindow(String name) {
+		String path = System.getProperty("user.dir") + "\\Screenshots\\" + name + uniqueId() + ".png";
+		File file = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		try {
+			FileUtils.copyFile(file, new File(path));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return path;
+	}
+
+	// TaKe Screenshot of element and get the path to attach in report
+	public String takeScreenshotOfElement(WebElement element, String name) {
+		String path = System.getProperty("user.dir") + "\\Screenshots\\" + name + uniqueId() + ".png";
+		File file = element.getScreenshotAs(OutputType.FILE);
+		try {
+			FileUtils.copyFile(file, new File(path));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return path;
+	}
+
+	// Browser actions
+	public void browserAction(String action) {
+		if (action.equalsIgnoreCase("refresh")) {
+			driver.navigate().refresh();
+		} else if (action.equalsIgnoreCase("back")) {
+			driver.navigate().back();
+		} else if (action.equalsIgnoreCase("forward")) {
+			driver.navigate().forward();
+		}
+	}
+
+	// get the page Title
+	public String getPageTitle() {
+		return driver.getTitle();
+	}
+
+	// get the text from element
+	public String getElementText(WebElement element) {
+		return element.getText();
+	}
+
+	// get the attribute value from element
+	public String getAttributeValue(WebElement element, String attribute) {
+		return element.getAttribute(attribute);
+	}
+
+	// Get window handle id
+	public String getWindowHandleId() {
+		return driver.getWindowHandle();
+	}
+
+	// Switch to Alert
+	public Alert getAlert() {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+		wait.until(ExpectedConditions.alertIsPresent());
+		Alert alert = driver.switchTo().alert();
+		return alert;
+	}
+
 	// Method to switch to frame
-	
-	// Method to switch to window
-	
+	public void switchToFrame(String frameName) {
+		driver.switchTo().frame(frameName);
+	}
+
 	// Method to switch to default frame
-	
+	public void switchToDefaultFrame() {
+		driver.switchTo().defaultContent();
+	}
+
+	// Method to switch to window
+	public void switchToWindow(String windowHandleId) {
+		driver.switchTo().window(windowHandleId);
+	}
+
 	// Method to open new tab
-	
+	public void openNewTab() {
+		driver.switchTo().newWindow(WindowType.TAB);
+	}
+
 	// Method to open new window
-	
-	
+	public void openNewWindow() {
+		driver.switchTo().newWindow(WindowType.WINDOW);
+	}
 
 }
