@@ -38,6 +38,6 @@ public class LoginPageElements extends WebCommons{
 	public By accountOverviewLinkLocator = By.xpath("//a[text()='Accounts Overview']");
 	
 	@FindBy(xpath="//a[text()='Admin Page']")
-	private WebElement adminPage;
+	public WebElement adminPage;
 
 }

@@ -6,11 +6,15 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Parameters;
+
+import com.framework.reports.ReportsClass;
+import com.framework.utilities.ReadExcel;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-public class WebDriverClass {
+public class WebDriverClass extends ReportsClass {
 
 	// All common methods to launch , close and to share browser driver details with other classes
 
@@ -48,6 +52,12 @@ public class WebDriverClass {
 	
 	public static synchronized WebDriver getDriver() {
 		return 	thread.get();	
+	}
+	
+	@DataProvider(name="logindata")
+	public String [][] loginData(){
+		String [][] data = ReadExcel.readData("TestData.xlsx", "Sheet1");
+		return data;
 	}
 
 }

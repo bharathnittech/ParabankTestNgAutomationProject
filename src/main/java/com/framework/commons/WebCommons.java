@@ -31,7 +31,6 @@ public class WebCommons {
 	// All common methods related to web application automation
 
 	public WebDriver driver = WebDriverClass.getDriver();
-	Actions action = new Actions(driver);
 
 	// Scroll till element
 	public void scrollToElement(WebElement element) {
@@ -71,16 +70,19 @@ public class WebCommons {
 
 	// Perform double click on element
 	public void doubleClick(WebElement element) {
+		Actions action = new Actions(driver);
 		action.doubleClick(element).perform();
 	}
 
 	// Perform right click on element
 	public void rightClick(WebElement element) {
+		Actions action = new Actions(driver);
 		action.contextClick(element).perform();
 	}
 
 	// Perform mouse hover on element
 	public void mouseHover(WebElement element) {
+		Actions action = new Actions(driver);
 		action.moveToElement(element).perform();
 	}
 
