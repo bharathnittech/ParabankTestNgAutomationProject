@@ -37,5 +37,43 @@ public class ApplicationTest extends WebDriverClass{
 		loginpage.enterCredentials(Username, Password);
 		loginpage.clickOnLoginAndVerifyLoginIsSuccessful();
 	}
+	
+	@Test(priority=4, groups= {"Sanity"})
+	public void verifyRegistrationPage() {
+		loginpage =LoginPageActions.getLoginPage();
+		regpage = RegistrationPageActions.getRegPage();
+		loginpage.launchApplication();
+		loginpage.getRegistrationPage();
+		regpage.verifyWhetherRegistrationPageisLaunched();
+	}
+	
+	@Test(priority=5)
+	public void verifyRegistrationPageHeader() {
+		loginpage =LoginPageActions.getLoginPage();
+		regpage = RegistrationPageActions.getRegPage();
+		loginpage.launchApplication();
+		loginpage.getRegistrationPage();
+		regpage.verifyWhetherRegistrationPageisLaunched();
+		regpage.verifyRegistrationPageHeader();
+	}
+	
+	@Test(priority=6)
+	public void verifyForgotLoginPage() {
+		loginpage =LoginPageActions.getLoginPage();
+		fppage = ForgotLoginInfoPageActions.getFPPage();
+		loginpage.launchApplication();
+		loginpage.getRegistrationPage();
+		fppage.verifyWhetherRegistrationPageisLaunched();
+	}
+	
+	@Test(priority=7)
+	public void verifyForgotLoginPageHeader() {
+		loginpage =LoginPageActions.getLoginPage();
+		fppage = ForgotLoginInfoPageActions.getFPPage();
+		loginpage.launchApplication();
+		loginpage.getRegistrationPage();
+		fppage.verifyWhetherRegistrationPageisLaunched();
+		fppage.verifyRegistrationPageHeader();
+	}
 
 }
